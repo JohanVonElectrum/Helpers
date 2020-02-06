@@ -79,9 +79,9 @@ public class Interpreter {
             if (term.indexOf(func.cmd) == -1) continue;
             switch (func.inputs) {
                 case 1:
-                    return (float)func.operation.apply(new float[] { Float.parseFloat(term.substring(term.indexOf(func.cmd) + 1, term.length())) });
+                    return Double.parseDouble("" + func.operation.apply(new float[] { Float.parseFloat(term.substring(term.indexOf(func.cmd) + func.cmd.length(), term.length())) }));
                 case 2:
-                    return (float)func.operation.apply(new float[] { Float.parseFloat(term.substring(0, term.indexOf(func.cmd))), Float.parseFloat(term.substring(term.indexOf(func.cmd) + 1, term.length())) });
+                    return Double.parseDouble("" + func.operation.apply(new float[] { Float.parseFloat(term.substring(0, term.indexOf(func.cmd))), Float.parseFloat(term.substring(term.indexOf(func.cmd) + func.cmd.length(), term.length())) }));
             }
         }
         return 0;
@@ -90,6 +90,15 @@ public class Interpreter {
     public static double Calculate(String term) {
         if (term.charAt(0) != '(') term = "(" + term + ")";
         System.out.println("Calculate: [term] " + term);
+
+        for (FunctionRegistry func: FunctionManager.instance.ListFunctions()) {
+            if (!func.isComposed()) continue;
+            int i = 0;
+            while (i != -1 && term.charAt(i - 1 < 0 ? 0 : i - 1) != '(') {
+                i = term.indexOf(func.cmd);
+                term = term.substring(0, i) + "(" + func.cmd + /* el term de la func + */ ")" /* + el resto del term*/;
+            }
+        }
 
         for (String str: Interpreter.GetTerms(term)) {
             if (CountFunctions(str) == 1) {

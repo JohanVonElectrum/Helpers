@@ -18,18 +18,18 @@ public class Main {
 
         RegisterFunctions();
 
-        System.out.println(Interpreter.Calculate("(3+5*(3-1)-5)+1"));
+        System.out.println(Interpreter.Calculate("(3+5*(3-1)-5)+(sqrt25)"));
     }
 
     public void RegisterFunctions() throws Exception {
-        functionManager.Register("+", "Addition.", 2, new Function() {
+        functionManager.Register("+", "Addition.", 2, false, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
                 return input[0] + input[1];
             }
         });
-        functionManager.Register("-", "Subtraction.", 2, new Function() {
+        functionManager.Register("-", "Subtraction.", 2, false, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
@@ -37,21 +37,21 @@ public class Main {
                 return input[0] - input[1];
             }
         });
-        functionManager.Register("*", "Multiplication.", 2, new Function() {
+        functionManager.Register("*", "Multiplication.", 2, false, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
                 return input[0] * input[1];
             }
         });
-        functionManager.Register("/", "Division.", 2, new Function() {
+        functionManager.Register("/", "Division.", 2, false, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
                 return input[0] / input[1];
             }
         });
-        functionManager.Register("sqrt", "Square root.", 1, new Function() {
+        functionManager.Register("sqrt", "Square root.", 1, true, new Function() {
             @Override
             public Object apply(Object o) {
                 return Math.sqrt(Double.parseDouble(((float[])o)[0] + ""));

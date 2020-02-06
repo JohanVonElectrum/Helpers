@@ -23,11 +23,11 @@ public class FunctionManager {
         return false;
     }
 
-    public boolean Register(String cmd, String desc, int inputs, Function func) throws Exception {
+    public boolean Register(String cmd, String desc, int inputs, boolean isFunc, Function func) throws Exception {
         if (FunctionExists(cmd)) throw new Exception("This function already exists.");
         String error = StringError.NotVoid(new String[][] {{"cmd", cmd}, {"desc", desc}});
         if (error != "") throw new Exception(error);
-        functions.add(new FunctionRegistry(cmd, desc, inputs, func));
+        functions.add(new FunctionRegistry(cmd, desc, inputs, isFunc, func));
         return true;
     }
 
