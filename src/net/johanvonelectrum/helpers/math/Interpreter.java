@@ -48,27 +48,36 @@ public class Interpreter {
     public static double MonoTermCompute(String term) {
         System.out.println("MonoTermCompute: [term] " + term);
 
-        int a = term.indexOf("*");
-        int b = term.indexOf("*");
-        if (CountFunctions(term) > FunctionManager.instance.GetMaxInputs() && GetTerms(term).length == 1) {
-            if (term.indexOf("*") != -1) {
-                for (int j = term.indexOf("*") - 1; j >= 0; j--) {
-                    if (term.charAt(j) == '+' || term.charAt(j) == '-') {
-                        a = j + 1;
-                        break;
+        for (FunctionRegistry func: FunctionManager.instance.OrderFunctions()) {
+            int a = term.indexOf(func.cmd);
+            int b = term.indexOf(func.cmd);
+            if (CountFunctions(term) > FunctionManager.instance.GetMaxInputs() && GetTerms(term).length == 1) {
+                if (term.indexOf(func.cmd) != -1) {
+                    for (int j = a - 1; j >= 0; j--) {
+                        if (FunctionManager.instance.GetFunctionRegistry(term.charAt(j) + "") == null) continue;
+                        if (FunctionManager.instance.GetFunctionRegistry(term.charAt(j) + "").order > func.order) {
+                            a = j + 1;
+                            break;
+                        }
                     }
-                }
-                for (int j = term.indexOf("*") + 1; j < term.length(); j++) {
-                    if (term.charAt(j) == '+' || term.charAt(j) == '-') {
-                        b = j;
-                        break;
+                    for (int j = b + 1; j < term.length(); j++) {
+                        int order = FunctionManager.instance.GetOrder(term.charAt(j) + "");
+                        System.out.println(term.charAt(j) + " order: " + order);
+                        if (order > func.order) {
+                            System.out.println("MaxLimB: " + term.charAt(j));
+                            b = j;
+                            break;
+                        }
                     }
+                    System.out.println("MonoTermCompute: [Compute] " + term.substring(a, b) + "   " + a + ":" + b);
+                    term = term.substring(0, a) + Compute(term.substring(a, b)) + term.substring(b, term.length());
+                    System.out.println("MonoTermCompute: [new term] " + term);
+                    System.exit(23);
                 }
-                System.out.println("MonoTermCount: [new term]" + term.substring(a, b));
             }
         }
 
-        return Compute(term.substring(a, b));
+        return Calculate(term);
     }
 
     public static double Compute(String term) {
@@ -92,11 +101,14 @@ public class Interpreter {
         System.out.println("Calculate: [term] " + term);
 
         for (FunctionRegistry func: FunctionManager.instance.ListFunctions()) {
-            if (!func.isComposed()) continue;
-            int i = 0;
+            if (!func.isComposed() || term.indexOf(func.cmd) == -1) continue;
+            int i = term.indexOf(func.cmd);
+            System.out.println(term.charAt(i - 1 < 0 ? 0 : i - 1));
             while (i != -1 && term.charAt(i - 1 < 0 ? 0 : i - 1) != '(') {
                 i = term.indexOf(func.cmd);
-                term = term.substring(0, i) + "(" + func.cmd + /* el term de la func + */ ")" /* + el resto del term*/;
+
+                term = term.substring(0, i) + "(" + term.substring(i, i + term.substring(i).indexOf(")") + 1) + ")" /* + el resto del term*/;
+                System.out.println(term);
             }
         }
 

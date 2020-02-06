@@ -18,18 +18,20 @@ public class Main {
 
         RegisterFunctions();
 
-        System.out.println(Interpreter.Calculate("(3+5*(3-1)-5)+(sqrt25)"));
+        //System.out.println(FunctionManager.instance.GetFunctionRegistry("-") != null);
+        Interpreter.Calculate("3+5*(3-1)-5");
+        //System.out.println(Interpreter.Calculate("(3+5*(3-1)-5)+sqrt(25)"));
     }
 
     public void RegisterFunctions() throws Exception {
-        functionManager.Register("+", "Addition.", 2, false, new Function() {
+        functionManager.Register("+", "Addition.", 2, false, 2, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
                 return input[0] + input[1];
             }
         });
-        functionManager.Register("-", "Subtraction.", 2, false, new Function() {
+        functionManager.Register("-", "Subtraction.", 2, false, 2, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
@@ -37,21 +39,21 @@ public class Main {
                 return input[0] - input[1];
             }
         });
-        functionManager.Register("*", "Multiplication.", 2, false, new Function() {
+        functionManager.Register("*", "Multiplication.", 2, false , 1, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
                 return input[0] * input[1];
             }
         });
-        functionManager.Register("/", "Division.", 2, false, new Function() {
+        functionManager.Register("/", "Division.", 2, false , 1, new Function() {
             @Override
             public Object apply(Object o) {
                 float[] input = (float[])o;
                 return input[0] / input[1];
             }
         });
-        functionManager.Register("sqrt", "Square root.", 1, true, new Function() {
+        functionManager.Register("sqrt", "Square root.", 1, true, 0, new Function() {
             @Override
             public Object apply(Object o) {
                 return Math.sqrt(Double.parseDouble(((float[])o)[0] + ""));

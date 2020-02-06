@@ -8,13 +8,15 @@ public class FunctionRegistry {
     String desc;
     int inputs;
     boolean composed;
+    int order;
     Function operation;
 
-    public FunctionRegistry(String cmd, String desc, int inputs, boolean composed, Function operation) {
+    public FunctionRegistry(String cmd, String desc, int inputs, boolean composed, int order, Function operation) {
         this.cmd = cmd.toLowerCase();
         this.desc = desc;
         this.inputs = inputs;
         this.composed = composed;
+        this.order = order;
         this.operation = operation;
     }
 
@@ -22,6 +24,7 @@ public class FunctionRegistry {
     public String getDesc() { return desc; }
     public int getInputs() { return inputs; }
     public boolean isComposed() { return composed; }
+    public int getOrder() { return order; }
     public Function getOperation() { return operation; }
 
 }
